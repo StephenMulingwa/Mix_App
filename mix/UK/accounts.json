@@ -1,0 +1,9 @@
+{"track3":{"base_url":"https:\/\/hst-api.wialon.com\/wialon\/ajax.html?", "access_token":""},
+"cms":{"base_url":"https:\/\/hst-api.wialon.com\/wialon\/ajax.html?", "access_token":""},
+"mix_za":{"IdentityUrl":"https:\/\/identity.za.mixtelematics.com", "ApiUrl":"https:\/\/integrate.za.mixtelematics.com",
+          "IdentityClientId":"", "IdentityClientSecret":"", "IdentityUsername":"@controltech-ea.com",
+          "IdentityPassword":"", "IdentityScope":"offline_access+MiX.Integrate"},
+"mix_uk":{"IdentityUrl":"https:\/\/identity.uk.mixtelematics.com", "ApiUrl":"https:\/\/integrate.uk.mixtelematics.com",
+          "IdentityClientId":"report.generation.api.uk", "IdentityClientSecret":"oXB19DEVIJBVM4lt", "IdentityUsername":"mawa@controltech-ea.com",
+          "IdentityPassword":"Juliankivuva123**", "IdentityScope":"offline_access+MiX.Integrate"}
+}
