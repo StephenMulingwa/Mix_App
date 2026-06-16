@@ -1,0 +1,22 @@
+## Neon Database Connection
+MixUsers=postgresql://neondb_owner:npg_Cap0zQPiBK8x@ep-long-fog-alifydz8-pooler.c-3.eu-central-1.aws.neon.tech/MixUsers?sslmode=require&channel_binding=require
+
+# MiX API credentials (mix_za from mix/ZA/accounts.json + mix_uk from mix/UK/accounts.json)
+MIX_ACCOUNTS_JSON={"mix_za":{"IdentityUrl":"https://identity.za.mixtelematics.com","ApiUrl":"https://integrate.za.mixtelematics.com","IdentityClientId":"integrate.za.rg","IdentityClientSecret":"2zVySvofUtsdwQV4","IdentityUsername":"mawa@controltech-ea.com","IdentityPassword":"Juliankivuva123**","IdentityScope":"offline_access+MiX.Integrate"},"mix_uk":{"IdentityUrl":"https://identity.uk.mixtelematics.com","ApiUrl":"https://integrate.uk.mixtelematics.com","IdentityClientId":"report.generation.api.uk","IdentityClientSecret":"oXB19DEVIJBVM4lt","IdentityUsername":"mawa@controltech-ea.com","IdentityPassword":"Juliankivuva123**","IdentityScope":"offline_access+MiX.Integrate"}}
+
+# ===================================
+# Email Service Configuration (For automated notifications)
+# ===================================
+SMTP_HOST=smtp.office365.com
+SMTP_PORT=587
+SMTP_USER=Musyoka@controltech-ea.com
+SMTP_PASSWORD=SMulingwa@2027
+SMTP_FROM_EMAIL=Musyoka@controltech-ea.com
+SMTP_FROM_NAME=ControlTech
+
+# ===================================
+# Automation (Vehicles tab + daily 14:00 EAT cron)
+# ===================================
+# Random secret used to authorise external/manual calls to /api/cron/send-daily-reports.
+# Vercel cron calls are auto-authorised via the x-vercel-cron header.
+CRON_SECRET=Mix-App-Password-Secret-63928@Mix-App-Password-Secret-46278@Mix-Updated-App

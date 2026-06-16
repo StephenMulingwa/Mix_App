@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart3, ClipboardList, FileBarChart, Mail } from "lucide-react";
+import {
+  BarChart3,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  FileBarChart,
+  Mail,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const SIDEBAR_COLLAPSED_KEY = "mix-sidebar-collapsed";
 
 export type AppTab = "reports" | "emails" | "logs";
 
@@ -44,43 +53,116 @@ function LiveClock() {
 }
 
 export function AppShell({ activeTab, onTabChange, children }: AppShellProps) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+    if (stored === "true") setCollapsed(true);
+  }, []);
+
+  function toggleSidebar() {
+    setCollapsed((prev) => {
+      const next = !prev;
+      localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(next));
+      return next;
+    });
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside
-        className="flex w-56 shrink-0 flex-col"
+        className={cn(
+          "sticky top-0 flex h-screen shrink-0 flex-col self-start overflow-x-hidden overflow-y-auto transition-[width] duration-300 ease-in-out",
+          collapsed ? "w-16" : "w-56"
+        )}
         style={{ backgroundColor: "hsl(var(--sidebar))" }}
       >
-        <div className="flex items-center gap-2 border-b border-white/10 px-5 py-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
+        <div
+          className={cn(
+            "flex items-center border-b border-white/10 py-5",
+            collapsed ? "justify-center px-2" : "gap-2 px-4"
+          )}
+        >
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/15">
             <BarChart3 className="h-5 w-5 text-white" />
           </div>
-          <div>
-            <p className="text-sm font-bold text-white">MIX Reports</p>
-            <p className="text-xs text-white/60">ControlTech</p>
-          </div>
+          {!collapsed && (
+            <div className="min-w-0 flex-1 overflow-hidden">
+              <p className="truncate text-sm font-bold text-white">MIX Reports</p>
+              <p className="truncate text-xs text-white/60">ControlTech</p>
+            </div>
+          )}
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4">
-          {NAV_ITEMS.map((item) => (
+        <nav className={cn("flex-1 py-4", collapsed ? "px-2" : "px-3")}>
+          <div
+            className={cn(
+              "mb-3 flex items-center",
+              collapsed ? "justify-center" : "justify-end"
+            )}
+          >
             <button
-              key={item.id}
-              onClick={() => onTabChange(item.id)}
-              className={cn(
-                "flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-                activeTab === item.id
-                  ? "border-l-4 border-amber-400 bg-white/10 text-white"
-                  : "text-white/75 hover:bg-white/10 hover:text-white"
-              )}
+              type="button"
+              onClick={toggleSidebar}
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/25 text-white/80 transition-colors hover:bg-black/35 hover:text-white"
             >
-              {item.icon}
-              {item.label}
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
             </button>
-          ))}
+          </div>
+
+          <div className="space-y-1">
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeTab === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  title={collapsed ? item.label : undefined}
+                  onClick={() => onTabChange(item.id)}
+                  className={cn(
+                    "flex w-full items-center transition-colors",
+                    collapsed ? "justify-center rounded-xl p-2" : "gap-3 rounded-xl px-3 py-2",
+                    isActive
+                      ? "border border-amber-400/70 bg-white/5"
+                      : "border border-transparent hover:bg-white/5"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg",
+                      isActive
+                        ? "bg-white/20 text-amber-400"
+                        : "bg-white/10 text-white"
+                    )}
+                  >
+                    {item.icon}
+                  </span>
+                  {!collapsed && (
+                    <span
+                      className={cn(
+                        "truncate text-sm font-semibold",
+                        isActive ? "text-amber-400" : "text-white"
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </nav>
 
-        <div className="border-t border-white/10 px-5 py-4">
-          <p className="text-xs text-white/50">Powered by ControlTech</p>
+        <div className={cn("border-t border-white/10 py-4", collapsed ? "px-2" : "px-4")}>
+          {!collapsed && (
+            <p className="text-xs text-white/50">Powered by ControlTech</p>
+          )}
         </div>
       </aside>
 

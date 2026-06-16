@@ -108,7 +108,7 @@ export function ReportPeriodCard() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Calendar className="h-5 w-5 text-secondary" />
-          Report period (Kenya Local)
+          Report period
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -135,9 +135,6 @@ export function ReportPeriodCard() {
                 Loading...
               </div>
             )}
-            <p className="text-xs text-muted-foreground">
-              Date rolls daily (last 14 days) · set time and click Save period
-            </p>
           </div>
 
           <div className="space-y-2">
