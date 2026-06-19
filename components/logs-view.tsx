@@ -1,10 +1,13 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
-import { CheckCircle2, ChevronDown, ChevronUp, Clock, XCircle } from "lucide-react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Clock, XCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const PAGE_SIZE = 10;
 
 interface JobRun {
   id: number;
@@ -103,6 +106,7 @@ export function LogsView() {
   const [jobs, setJobs] = useState<JobRun[]>([]);
   const [loading, setLoading] = useState(true);
   const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
 
   const load = useCallback(async () => {
     try {
@@ -121,6 +125,17 @@ export function LogsView() {
     const interval = setInterval(load, 10000);
     return () => clearInterval(interval);
   }, [load]);
+
+  const totalPages = Math.max(1, Math.ceil(jobs.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages - 1);
+  const pageJobs = useMemo(
+    () => jobs.slice(currentPage * PAGE_SIZE, currentPage * PAGE_SIZE + PAGE_SIZE),
+    [jobs, currentPage]
+  );
+
+  useEffect(() => {
+    if (page >= totalPages) setPage(Math.max(0, totalPages - 1));
+  }, [page, totalPages]);
 
   const lastUk = jobs.find((j) => j.region === "UK");
   const lastZa = jobs.find((j) => j.region === "ZA");
@@ -172,7 +187,7 @@ export function LogsView() {
                   </tr>
                 </thead>
                 <tbody>
-                  {jobs.map((job, i) => (
+                  {pageJobs.map((job, i) => (
                     <Fragment key={job.id}>
                       <tr
                         className={cn(
@@ -234,6 +249,37 @@ export function LogsView() {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+          {!loading && jobs.length > 0 && (
+            <div className="flex items-center justify-between border-t px-4 py-3">
+              <p className="text-xs text-muted-foreground">
+                Showing {currentPage * PAGE_SIZE + 1}–
+                {Math.min((currentPage + 1) * PAGE_SIZE, jobs.length)} of {jobs.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === 0}
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                <span className="text-xs text-muted-foreground">
+                  Page {currentPage + 1} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= totalPages - 1}
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
